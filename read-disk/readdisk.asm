@@ -8,6 +8,7 @@ disk_load:
     push dx
 
     mov ah, 0x02 ; ah <- int 0x13 function. 0x02 = 'read'
+    
     mov al, dh ; al <- number of sectors to read (0x01 .. 0x80)
     mov cl, 0x02 ; mov to cl the sector we want to read
                  ; since 0x01 is our boot sector, 0x02 is the first 'available' sector
@@ -44,15 +45,15 @@ sectors_err:
 
     jmp disk_loop
 
+disk_loop:
+    jmp $
+
+
 read_successful:
     mov bx, disk_read_success
     call print
 
-    jmp disk_loop
-
-
-disk_loop:
-    jmp $
+    call switch_to_pm
 
 
 disk_read_err: db "Disk read error", 0
